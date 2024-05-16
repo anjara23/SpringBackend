@@ -19,11 +19,6 @@ public class CultureController {
         cultureService.addCulture(cultureRequest);
     }
 
-    @PutMapping("/updateC/{id_cultiver}")
-    public  void updateCulture(@PathVariable Integer id_cultiver, @RequestBody CultureRequest cultureRequest){
-        cultureService.updateCulture(id_cultiver, cultureRequest);
-    }
-
     @PutMapping("/doRecolte/{id_cultiver}")
     public void doRecolte(@PathVariable Integer id_cultiver, @RequestBody CultureRequest cultureRequest){
         cultureService.doRecolte(id_cultiver, cultureRequest);

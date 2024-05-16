@@ -39,7 +39,7 @@ public class ParcelleController {
         return parcelleService.getByType(type_sol);
     }
 
-    @GetMapping("/getTypeAvant/{type_culture_avant}")
+    @GetMapping("/getAvant/{type_culture_avant}")
     public List<Object[]> getTypeAvant(@PathVariable String type_culture_avant){
         return parcelleService.getTypeAvant(type_culture_avant);
     }

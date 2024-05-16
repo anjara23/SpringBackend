@@ -21,7 +21,7 @@ public class CalendrierEntity {
 
     @OneToOne
     @JoinColumn(name = "id_plante")
-    private PlanteEntity id_plante;
+    private PlanteEntity plante;
 
     private String activite;
     private Date date_debut;

@@ -25,7 +25,7 @@ public class CalendrierService {
         PlanteEntity plante = new PlanteEntity();
         plante.setId_plante(calendrierRequest.getId_plante());
 
-        cal.setId_plante(plante);
+        cal.setPlante(plante);
         cal.setActivite(calendrierRequest.getActivite());
         cal.setDate_debut(calendrierRequest.getDate_debut());
         cal.setDate_fin(calendrierRequest.getDate_fin());
@@ -44,7 +44,7 @@ public class CalendrierService {
         PlanteEntity plante = new PlanteEntity();
         plante.setId_plante(calendrierRequest.getId_plante());
 
-        cal.setId_plante(plante);
+        cal.setPlante(plante);
         cal.setActivite(calendrierRequest.getActivite());
         cal.setDate_debut(calendrierRequest.getDate_debut());
         cal.setDate_fin(calendrierRequest.getDate_fin());
@@ -64,12 +64,11 @@ public class CalendrierService {
         String notif = "";
         Date auj = new Date();
        List<CalendrierEntity> deb = calendrierRepository.getDeb(auj);
-        if(deb != null){
+        if(deb != null) {
             CalendrierEntity debut = deb.getFirst();
-           String activite =  debut.getActivite();
-
-           notif = "Début de l'activité : "+ activite;
-           return notif;
+            String activite = debut.getActivite();
+            notif = "Début de l'activité : " + activite;
+            return notif;
         }
         return notif;
     }

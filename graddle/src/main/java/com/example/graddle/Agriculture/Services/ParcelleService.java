@@ -37,15 +37,42 @@ public class ParcelleService {
         }
 
         ParcelleEntity parc = pa.get();
+        Double latitude = parcelleRequest.getLatitude();
+        Double longitude = parcelleRequest.getLongitude();
+        String type_sol = parcelleRequest.getType_sol();
+        String cultu = parcelleRequest.getType_culture_avant();
+        Double surface = parcelleRequest.getSurface();
 
-        parc.setLatitude(parcelleRequest.getLatitude());
-        parc.setLongitude(parcelleRequest.getLongitude());
-        parc.setType_sol(parcelleRequest.getType_sol());
-        parc.setType_culture_avant(parcelleRequest.getType_culture_avant());
-        parc.setSurface(parcelleRequest.getSurface());
 
-        parc = parcelleRepository.save(parc);
+        if(latitude != null){
+            parc.setLatitude(latitude);
+        }
+        if(longitude != null){
+            parc.setLongitude(longitude);
+        }
+        if(type_sol != null){
+            parc.setType_sol(type_sol);
+        }
+        if(cultu != null){
+            parc.setType_culture_avant(cultu);
+        }
+        if(surface != null){
+            parc.setSurface(surface);
+        }
 
+        parcelleRepository.save(parc);
+
+    }
+
+    public void updateTypeAvant(Integer code_parcelle, String type_avant){
+        Optional<ParcelleEntity> pa = parcelleRepository.findById(code_parcelle);
+        if(!pa.isPresent()){
+            throw new EntityNotFoundException("ParcelleEntity with id " + code_parcelle + " not found");
+        }
+        ParcelleEntity parc = pa.get();
+        parc.setType_culture_avant(type_avant);
+
+      parcelleRepository.save(parc);
     }
 
     public Boolean updateSurface(Integer code_parcelle, Double x){
@@ -59,7 +86,7 @@ public class ParcelleService {
        Double surf = parc.getSurface();
        Double surface = surf + x ;
 
-       if(surface <= 0){
+       if(surface < 0){
            return false;
        }
 

@@ -128,6 +128,8 @@ public class AnimalService {
             }
             AnimalEntity ani = aniOptional.get();
 
+            String espece1 = ani.getEspece();
+
             // Mettre à jour les propriétés de l'animal avec les valeurs de AnimalRequest
             AnimalRequest animalRequest = animalSanteRequest.getAnimalRequest();
             ani.setEspece(animalRequest.getEspece());
@@ -159,12 +161,17 @@ public class AnimalService {
                         produitRequest.setEspecef(ani.getEspece());//especef = espèce ni-fournir anle produit
 
                             //verifie si cet animal existe déjà comme produit dans la table produit
-                            ProduitEntity existe = produitService.find(produitRequest);
+                            ProduitEntity existe = produitService.find(produitRequest.getType_produit(), produitRequest.getEspecef());
                             if(existe != null ){
+
                               Integer id_produit =  existe.getId_produit();
                               //incrémente la quantité
                               Double nouvelleQuantite = produitRequest.getQuantite() + existe.getQuantite();
                               produitRequest.setQuantite(nouvelleQuantite);
+                              //ze rehetra ntovy anarana taloha
+                              produitService.updateEspece(espece1, ani.getEspece());
+
+                              produitRequest.setEspecef(ani.getEspece());
 
                               produitService.updateProduit(id_produit, produitRequest);
                             }
@@ -273,18 +280,13 @@ public class AnimalService {
         return animalRepository.nbDec();
     }
 
-
-    //nombre des animaux par espèce et liste des animaux par espèce
-
     public Integer nbParEspece(String espece){
         return  animalRepository.nbParEspece(espece);
     }
 
-
     public List<Object[]> getByEspece(String espece){
         return animalRepository.getByEspece(espece);
     }
-
 
     /*nb animal achetés par espèces
     tsy aiko na acheté na Achat le statut any fa raha miova de ary am requête ary am AnimalRepository no manova*/
@@ -293,25 +295,21 @@ public class AnimalService {
         return  animalRepository.getAchatEspece(espece);
     }
 
-
     //nb animaux vendus par espèce
     public  Integer nbVendu(String espece){
         return animalRepository.nbVendu(espece);
     }
-
 
     //le liste des vivants
     public List<Object[]> getAllData(){
         return animalRepository.getEssentiel();
     }
 
-
     //get Animal by id
     public AnimalEntity getAnimal(Integer id_animal){
         AnimalEntity ani = animalRepository.findById(id_animal).get();
         return ani;
     }
-
 
     //info personnels
     public SanteEntity getAnimalSante(Integer id_animal) {
@@ -326,7 +324,6 @@ public class AnimalService {
 
 
     //diagramme Croissance
-
     public Double diagCroiss (CroissanceRequest request){
 
         if (request.getA() <= request.getB()) {

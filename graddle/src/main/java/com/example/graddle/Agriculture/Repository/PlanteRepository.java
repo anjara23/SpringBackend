@@ -19,4 +19,10 @@ public interface PlanteRepository extends JpaRepository<PlanteEntity, Integer> {
 
     @Query(value = "SELECT id_plante, type_plante FROM public.plante ", nativeQuery = true)
     List<Object[]> getIdType();
+
+    @Query(value = "SELECT type_plante FROM public.plante WHERE id_plante = :id_plante", nativeQuery = true)
+    String getByIdP(Integer id_plante);
+
+    @Query(value = "SELECT variete FROM public.plante WHERE id_plante = :id_plante", nativeQuery = true)
+    String getVar(Integer id_plante);
 }

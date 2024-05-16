@@ -27,10 +27,10 @@ public class ProduitService {
 
     private final ProductionService productionService;
 
-     Map<Integer, Integer> produitToproduction = new HashMap<>();
+
     public void addProduit(ProduitRequest produitRequest){
 
-        ProduitEntity existe = find(produitRequest);
+        ProduitEntity existe = find(produitRequest.getType_produit(), produitRequest.getEspecef());
         if (existe != null) {
             Integer id_produit =  existe.getId_produit();
             //incrémente la quantité
@@ -78,16 +78,13 @@ public class ProduitService {
 
 
                    ProductionRequest request = new ProductionRequest();
-
+                   request.setId_produit(prood.getId_produit());
                    request.setType_produit(produit.getType_produit());
                    request.setEspece(produit.getEspecef());
                    request.setMois(mois);
 
                    ProductionEntity production = productionService.addKPI(request);
 
-                       Integer id_prod = production.getId_prod();
-                       Integer id_produit = prood.getId_produit();
-                       produitToproduction.put(id_produit, id_prod);
 
                }
 
@@ -99,7 +96,7 @@ public class ProduitService {
 
 
     }
-    
+
     public void updateProduit(Integer id_produit, ProduitRequest produitRequest){
         Optional<ProduitEntity> pro =produitRepository.findById(id_produit);
         if (!pro.isPresent()) {
@@ -135,16 +132,15 @@ public class ProduitService {
         if (mois != null) {
             // Créer un objet ProductionRequest pour passer à la méthode updateKPI
             ProductionRequest request = new ProductionRequest();
+            request.setId_produit(id_produit);
             request.setType_produit(produit.getType_produit());
             request.setEspece(produit.getEspecef());
             request.setMois(mois);
 
             // Appeler la méthode updateKPI avec le ProductionRequest créé
-            Integer id_prod = produitToproduction.get(id_produit);
-            if (id_prod != null) { productionService.updateKPI(id_prod, request);
-            } else {
-                System.out.println("Erreur : id_prod est null dans la map produitToproduction.");
-            }
+
+             productionService.updateKPI(request);
+
         } else {
             System.out.println("Erreur : Le mois est nul, ne peut pas mettre à jour KPI.");
         }
@@ -152,31 +148,30 @@ public class ProduitService {
 
     }
 
-    public void deleteProduit(Integer id_produit){
-        Optional<ProduitEntity> pro =produitRepository.findById(id_produit);
-        if (!pro.isPresent()) {
-            throw new EntityNotFoundException("AnimalEntity with id " + id_produit + " not found");
+    public void updateEspece(String espece1, String espece2){
+        List<ProduitEntity> list = produitRepository.getByEspece(espece1);
+            for(ProduitEntity produit : list){
+                produit.setEspecef(espece2);
+            }
+    }
+
+    public void deleteProduit(Integer id_produit) {
+        Optional<ProductionEntity> production = productionRepository.findById_produit(id_produit);
+
+        if(production.isPresent()){
+            ProductionEntity product = production.get();
+            productionRepository.delete(product);
         }
-        ProduitEntity prod = pro.get();
 
-        Integer mois = null;
-        Date dateProd = prod.getDate_prod();
-        if (dateProd != null) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(dateProd);
-            mois = calendar.get(Calendar.MONTH) + 1; // Obtenir le mois (1-12)
+        Optional<ProduitEntity> produit =produitRepository.findById(id_produit);
+
+        if (produit.isPresent()) {
+            ProduitEntity pro = produit.get();
+            produitRepository.delete(pro);
         }
 
-        String type_produit =prod.getType_produit();
-        String espece =prod.getEspecef();
 
-        ProductionEntity existe = productionRepository.findKPI(mois, espece, type_produit);
-        if(existe != null){
-            Integer id_prod = existe.getId_prod();
-            productionService.deleteKPI(id_prod);
 
-        }
-        produitRepository.delete(prod);
 
     }
 
@@ -184,8 +179,8 @@ public class ProduitService {
         return produitRepository.getAllProd();
     }
 
-    public List<Object[]> getByType(){
-        return produitRepository.getByType();
+    public List<Object[]> getByType(String type_produit){
+        return produitRepository.getByType(type_produit);
     }
 
 
@@ -195,10 +190,7 @@ public class ProduitService {
         return produitRepository.diagQ(type_prod);
     }
 
-    public ProduitEntity find(ProduitRequest produitRequest){
-       String type_produit = produitRequest.getType_produit();
-       String especef = produitRequest.getEspecef();
-
+    public ProduitEntity find(String type_produit , String especef){
        return produitRepository.find(type_produit, especef);
     }
 

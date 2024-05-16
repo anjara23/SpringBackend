@@ -1,5 +1,6 @@
 package com.example.graddle.Elevage.Services;
 
+import com.example.graddle.Elevage.Entities.ProduitEntity;
 import com.example.graddle.Elevage.Repository.AnimalRepository;
 import com.example.graddle.Elevage.Entities.ProductionEntity;
 import com.example.graddle.Elevage.Payload.ProductionRequest;
@@ -22,35 +23,38 @@ public class ProductionService {
 
     private final ProduitRepository produitRepository;
 
-
-
     public Map<Integer, Double> diagKPI(ProductionRequest productionRequest) {
 
+        Integer id_produit = productionRequest.getId_produit();
+            ProduitEntity prod = new ProduitEntity();
+            prod.setId_produit(id_produit);
         Integer mois = productionRequest.getMois();
         String type_produit = productionRequest.getType_produit();
         String espece = productionRequest.getEspece();
 
-        List<Object[]> monthsAndKPIList = productionRepository.findMonthsAndKPI(mois, espece, type_produit);
+        List<Object[]> monthsAndKPIList = productionRepository.findMonthsAndKPI(mois, espece, type_produit,id_produit);
 
         Map<Integer, Double> monthsAndKPI = new HashMap<>();
 
-
         for (Object[] entry : monthsAndKPIList) {
-            Integer Mois = (Integer) entry[0]; // Mois
-            Double kpi = (Double) entry[1]; // KPI
+            Integer Mois = (Integer) entry[0];
+            Double kpi = (Double) entry[1];
 
-            // Ajouter le mois et le KPI à la map
-            monthsAndKPI.put(mois, kpi);
+            monthsAndKPI.put(Mois, kpi);
         }
 
-        // Retourner la map contenant les mois et les KPI
         return monthsAndKPI;
     }
-
 
     public ProductionEntity addKPI(ProductionRequest productionRequest){
 
         ProductionEntity production = new ProductionEntity();
+
+            Integer id_produit = productionRequest.getId_produit();
+
+            ProduitEntity produit = new ProduitEntity();
+            produit.setId_produit(id_produit);
+
             Integer mois = productionRequest.getMois();
             String type_produit = productionRequest.getType_produit();
             String espece = productionRequest.getEspece();
@@ -70,6 +74,7 @@ public class ProductionService {
 
 
         //ajout table
+            production.setProduit(produit);
             production.setType_produit(type_produit);
             production.setEspece(espece);
             production.setMois(mois);
@@ -81,38 +86,8 @@ public class ProductionService {
 
     }
 
-
-   /* public void updateKPI(ProductionRequest productionRequest ){
-        Integer mois = productionRequest.getMois();
-        String type_produit = productionRequest.getType_produit();
-        String espece = productionRequest.getEspece();
-
-        ProductionEntity existe = productionRepository.findKPI(mois, espece, type_produit);
-
-        if(existe != null){
-
-            Double ttlQ = produitRepository.sumQMonth(mois, type_produit);
-
-            Integer ttlAni = animalRepository.aniUntilMonth(mois, espece);
-            Double kpi = null;
-            if (ttlAni != null && ttlAni > 0) {
-                if (kpi == null) {
-                    kpi = 0.0;
-                }
-                kpi += ttlQ / ttlAni;
-            } else {
-                kpi = 0.0;
-            }
-
-            //modif
-            existe.setKpi(kpi);
-            productionRepository.save(existe);
-        }
-
-
-    }*/
-
-    public void updateKPI(Integer id_prod,ProductionRequest productionRequest) {
+    public void updateKPI(ProductionRequest productionRequest) {
+        Integer id_produit = productionRequest.getId_produit();
         Integer mois = productionRequest.getMois();
         String type_produit = productionRequest.getType_produit();
         String espece = productionRequest.getEspece();
@@ -121,7 +96,7 @@ public class ProductionService {
         System.out.println("Paramètres de recherche - Mois: " + mois + ", Type de produit: " + type_produit + ", Espèce: " + espece);
 
         // Recherche de l'enregistrement existant
-       Optional<ProductionEntity>  existe = productionRepository.findById(id_prod);
+       Optional<ProductionEntity>  existe = productionRepository.findById_produit(id_produit);
 
         if (existe.isPresent()) {
 
@@ -161,19 +136,6 @@ public class ProductionService {
             System.out.println("Aucun enregistrement existant trouvé pour les paramètres spécifiés.");
         }
     }
-
-    public void deleteKPI(Integer id_prod){
-        Optional<ProductionEntity> pro =productionRepository.findById(id_prod);
-        if (!pro.isPresent()) {
-            throw new EntityNotFoundException("AnimalEntity with id " + id_prod + " not found");
-        }
-        ProductionEntity production = pro.get();
-
-        productionRepository.delete(production);
-    }
-
-
-
 
 
 

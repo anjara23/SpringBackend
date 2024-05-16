@@ -45,25 +45,22 @@ public class PlanteService {
 
     }
 
-    public Boolean updateNbP(Integer id_plante, Double x){
+    public void updateNbP(Integer id_plante, Double x) {
         Optional<PlanteEntity> p = planteRepository.findById(id_plante);
-        if (!p.isPresent()){
+        if (!p.isPresent()) {
             throw new EntityNotFoundException("PlanteEntity with id " + id_plante + " not found");
         }
         PlanteEntity plante = p.get();
 
         Double nbr = plante.getNbr_plante();
-        Double nbr_plante = nbr + x ;
+        Double nbr_plante = nbr - x;
 
-        if(nbr_plante <= 0 ){
-            return false;
+        if (nbr_plante <= 0) {
+            nbr_plante = 0.0; // Si nbr_plante est négatif, le mettre à 0
         }
 
-            plante.setNbr_plante(nbr_plante);
-            planteRepository.save(plante);
-
-            return true;
-
+        plante.setNbr_plante(nbr_plante);
+        planteRepository.save(plante);
     }
 
     public List<Object[]> getAllPlante(){

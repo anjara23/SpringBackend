@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface CultureRepository extends JpaRepository<CultureEntity, Integer> {
 
-    @Query(value = "SELECT id_cultiver, code_parcelle, id_plante, date_plantation, date_production, date_recolte, produit_kg, nb_planter, surface_c, resulat_c FROM public.culture", nativeQuery = true)
+    @Query(value = "SELECT id_cultiver, code_parcelle, id_plante, date_plantation, date_production, date_recolte, produit_kg, nb_planter, surface_c, resultat_c FROM public.culture", nativeQuery = true)
     List<Object[]> getAllC();
 
     @Query(value = "SELECT * FROM public.culture c JOIN public.plante p ON c.id_plante = p.id_plante WHERE p.variete = :variete", nativeQuery = true)

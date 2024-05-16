@@ -18,4 +18,7 @@ public interface CalendrierRepository extends JpaRepository<CalendrierEntity, In
 
     @Query(value = "SELECT * FROM public.calendrier WHERE  calendrier.date_fin = :auj", nativeQuery = true)
     List<CalendrierEntity> getFin(Date auj);
+
+    @Query(value = "SELECT id_calendrier FROM public.calendrier WHERE  id_plante = :id_plante", nativeQuery = true)
+    Integer getId(Integer id_plante);
 }

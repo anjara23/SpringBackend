@@ -45,7 +45,7 @@ public class PlanteController {
         return planteService.getIdType();
     }
 
-    @DeleteMapping("/delete/id_plante")
+    @DeleteMapping("/delete/{id_plante}")
     public void deletePlante(@PathVariable Integer id_plante){
         planteService.deletePlante(id_plante);
     }

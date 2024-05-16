@@ -35,9 +35,9 @@ public class ProduitController {
         return produitService.getAllProd();
     }
 
-    @GetMapping("/getByType")
-    public List<Object[]> getByType(){
-        return produitService.getByType();
+    @GetMapping("/getByType{type_produit}")
+    public List<Object[]> getByType(@PathVariable String type_produit){
+        return produitService.getByType(type_produit);
     }
 
     @GetMapping("/diagQ/{type_prod}")

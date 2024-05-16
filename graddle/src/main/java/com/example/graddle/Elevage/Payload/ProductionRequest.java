@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProductionRequest {
 
+     private Integer id_produit;
      private String espece;
      private String type_produit;
      private Integer mois ;
