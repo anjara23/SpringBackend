@@ -28,13 +28,13 @@ public class FermierService {
         fermierRepository.save(ferm);
     }
 
-    public ResponseEntity<String> authentificationF(FermierRequest fermierRequest){
+    public ResponseEntity<String> authentificationF(AuthRequest authRequest){
 
-        if (fermierRequest == null || fermierRequest.getNom_exp() == null || fermierRequest.getMail() == null || fermierRequest.getMdp() == null) {
+        if (authRequest == null || authRequest.getNom() == null || authRequest.getMdp() == null) {
             throw new IllegalArgumentException("Les données d'authentification sont incomplètes");
         }
-        String nom = fermierRequest.getNom();
-        String mdp = fermierRequest.getMdp();
+        String nom = authRequest.getNom();
+        String mdp = authRequest.getMdp();
 
         Optional<FermierEntity> present = fermierRepository.auth(nom,mdp);
         if(!present.isPresent()){

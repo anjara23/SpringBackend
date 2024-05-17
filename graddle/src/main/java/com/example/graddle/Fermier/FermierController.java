@@ -19,5 +19,5 @@ public class FermierController {
     public void inscrireF (@RequestBody FermierRequest fermierRequest){ fermierService.inscrireF(fermierRequest); }
 
     @PostMapping("/authentification")
-    public ResponseEntity<String> authentificationF(@RequestBody FermierRequest fermierRequest){ return fermierService.authentificationF(fermierRequest);}
+    public ResponseEntity<String> authentificationF(@RequestBody AuthRequest authRequest){ return fermierService.authentificationF(authRequest);}
 }
